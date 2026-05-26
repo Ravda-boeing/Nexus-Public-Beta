@@ -22,15 +22,21 @@ async function sendMessage() {
     const typing = document.getElementById("typing-indicator");
     typing.style.display = "block";
 
-    const response = await fetch("http://localhost:8000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-    });
+    try {
+        const response = await fetch("https://nexus-public-beta-backend.onrender.com/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message })
+        });
 
-    const data = await response.json();
-    typing.style.display = "none";
-    addMessage(data.reply, "bot");
+        const data = await response.json();
+        typing.style.display = "none";
+
+        addMessage(data.reply, "bot");
+    } catch (err) {
+        typing.style.display = "none";
+        addMessage("Connection error. Backend might be offline.", "bot");
+    }
 }
 
 // Send message on button click
